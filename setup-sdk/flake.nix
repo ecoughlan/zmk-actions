@@ -34,11 +34,11 @@
 
           pythonSmall = [ pythonSmallEnv ];
 
-          pythonFull = [
-            (zephyr_.pythonEnv.override {
-              extraPackages = ps: [ ps.setuptools ];
-            })
-          ];
+          pythonFullEnv = zephyr_.pythonEnv.override {
+            extraPackages = ps: [ ps.setuptools ];
+          };
+
+          pythonFull = [ pythonFullEnv ];
         in
         rec {
           gnuarmemb = pkgs.mkShellNoCC {
@@ -67,8 +67,10 @@
             packages = cmake ++ pythonFull ++ [ (zephyr_.sdk-0_16.override { targets = [ "arm-zephyr-eabi" ]; }) ];
             env = {
               ZEPHYR_TOOLCHAIN_VARIANT = "zephyr";
-              PYTHONPATH = "${zephyr_.pythonEnv}/${zephyr_.pythonEnv.sitePackages}";
             };
+            shellHook = ''
+              export PYTHONPATH="${pythonFullEnv}/${pythonFullEnv.sitePackages}:$PYTHONPATH"
+            '';
           };
 
           default = zephyr;
