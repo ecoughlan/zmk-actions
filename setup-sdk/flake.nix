@@ -29,6 +29,8 @@
               west
               pyelftools
               pyyaml
+              protobuf
+              grpcio-tools
             ]))
           ];
 
