@@ -64,12 +64,12 @@
           };
 
           zephyr-full = pkgs.mkShellNoCC {
-            packages = cmake ++ pythonFull ++ [ (zephyr_.sdk-0_16.override { targets = [ "arm-zephyr-eabi" ]; }) ];
+            packages = cmake ++ pythonFull ++ [ pythonSmallEnv ] ++ [ (zephyr_.sdk-0_16.override { targets = [ "arm-zephyr-eabi" ]; }) ];
             env = {
               ZEPHYR_TOOLCHAIN_VARIANT = "zephyr";
             };
             shellHook = ''
-              export PYTHONPATH="${pythonFullEnv}/${pythonFullEnv.sitePackages}:$PYTHONPATH"
+              export PYTHONPATH="${pythonSmallEnv}/${pythonSmallEnv.sitePackages}:${pythonFullEnv}/${pythonFullEnv.sitePackages}:$PYTHONPATH"
             '';
           };
 
