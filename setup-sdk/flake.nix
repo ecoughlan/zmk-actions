@@ -57,8 +57,10 @@
             packages = cmake ++ pythonSmall ++ [ (zephyr_.sdk-0_16.override { targets = [ "arm-zephyr-eabi" ]; }) ];
             env = {
               ZEPHYR_TOOLCHAIN_VARIANT = "zephyr";
-              PYTHONPATH = "${pythonSmallEnv}/${pythonSmallEnv.sitePackages}";
             };
+            shellHook = ''
+              export PYTHONPATH="${pythonSmallEnv}/${pythonSmallEnv.sitePackages}:$PYTHONPATH"
+            '';
           };
 
           zephyr-full = pkgs.mkShellNoCC {
