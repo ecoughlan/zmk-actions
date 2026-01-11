@@ -24,15 +24,15 @@
             pkgs.protobuf
           ];
 
-          pythonSmall = [
-            (pkgs.python3.withPackages (ps: with ps; [
-              west
-              pyelftools
-              pyyaml
-              protobuf
-              grpcio-tools
-            ]))
-          ];
+          pythonSmallEnv = pkgs.python3.withPackages (ps: with ps; [
+            west
+            pyelftools
+            pyyaml
+            protobuf
+            grpcio-tools
+          ]);
+
+          pythonSmall = [ pythonSmallEnv ];
 
           pythonFull = [
             (zephyr_.pythonEnv.override {
@@ -57,6 +57,7 @@
             packages = cmake ++ pythonSmall ++ [ (zephyr_.sdk-0_16.override { targets = [ "arm-zephyr-eabi" ]; }) ];
             env = {
               ZEPHYR_TOOLCHAIN_VARIANT = "zephyr";
+              PYTHONPATH = "${pythonSmallEnv}/${pythonSmallEnv.sitePackages}";
             };
           };
 
